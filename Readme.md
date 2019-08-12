@@ -54,4 +54,4 @@ Application style:
 
 Marcus Greiner - marcusGreiner@ITsmus.de
 
-https://github.com/velotist/AethiopicMultiplier
+https://velotist.github.io/AethiopicMultiplier/
