@@ -74,9 +74,7 @@ namespace AethiopicMultiplication
 
         static void Main(string[] args)
         {
-            bool condition = true;
-
-            while (condition)
+            while (true)
             {
                 int multiplier = ValidateInput("Bitte Multiplikator eingeben: ");
                 Console.WriteLine();
@@ -95,28 +93,32 @@ namespace AethiopicMultiplication
                 ShowContentOfArray(table);
 
                 Console.WriteLine();
-                Console.Write("Again? Press q for quit   ");
+                Console.Write("Press q for quit or any other key for continuing...   ");
                 if (Console.ReadLine() == "q")
                     break;
+                Console.WriteLine();
             }
         }
 
-        public static int ValidateInput(string question)
+        public static int ValidateInput(string questionText)
         {
             int number = 0;
-            string inputOfUser = "";
+
             while (number == 0)
             {
-                Console.Write(question);
-                inputOfUser = Console.ReadLine();
+                Console.Write(questionText);
                 try
                 {
-                    number = int.Parse(inputOfUser);
-
+                    number = int.Parse(Console.ReadLine());
                 }
                 catch (FormatException)
                 {
                     Console.WriteLine("Eingabe war keine gültige Ganzzahl.");
+                    Console.WriteLine();
+                }
+                catch (OverflowException)
+                {
+                    Console.WriteLine("Wert außerhalb des Integer-Bereichs.");
                     Console.WriteLine();
                 }
             }
@@ -155,11 +157,17 @@ namespace AethiopicMultiplication
         {
             table[0, 0] = multiplier;
             table[0, 1] = multiplicand;
+            int firstMultiplicand = multiplicand;
+            // without this condition the first row wouldn't be added, when the multiplier is even
+            if (table[0, 0] % 2 == 0)
+                table[0, 1] = 0;
 
             int row = 1;
             while (row < amountOfRowsInArray)
             { 
                 multiplier = multiplier / 2;
+                table[row, 0] = multiplier;
+
                 multiplicand = multiplicand * 2;
                 if (multiplier % 2 == 0)
                 {
@@ -169,7 +177,7 @@ namespace AethiopicMultiplication
                 {
                     table[row, 1] = multiplicand;
                 }
-                table[row, 0] = multiplier;
+
                 row++;
             }
 
@@ -178,7 +186,7 @@ namespace AethiopicMultiplication
             {
                 result = result + table[i, 1];
             }
-            Console.WriteLine("Ergebnis äthiopische Multiplikation aus {0} * {1} = {2}", table[0, 0], table[0, 1], result);
+            Console.WriteLine("Ergebnis äthiopische Multiplikation aus {0} * {1} = {2}", table[0, 0], firstMultiplicand, result);
             return result;
         }
     }
