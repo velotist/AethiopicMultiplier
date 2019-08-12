@@ -79,11 +79,14 @@ namespace AethiopicMultiplication
                 int multiplier = ValidateInput("Bitte Multiplikator eingeben: ");
                 Console.WriteLine();
 
-                // Detect the length of the array´s first dimension with method DetectRowsForArray(int, int)
-                table = new int[DetectRowsForArray(multiplier), 2];
+                // Check for consistency: if multiplier = 0 i won't need to detect lenght of array
+                if(multiplier == 0)
+                    table = new int[1, 2];
+                else
+                    // Detect the length of the array´s first dimension with method DetectRowsForArray(int, int)
+                    table = new int[DetectRowsForArray(multiplier), 2];
 
                 int multiplicand = ValidateInput("Bitte Multiplikand eingeben: ");
-
                 Console.WriteLine();
 
                 Multiply(multiplier, multiplicand);
@@ -102,9 +105,8 @@ namespace AethiopicMultiplication
 
         public static int ValidateInput(string questionText)
         {
-            int number = 0;
-
-            while (number == 0)
+            int number = -1;
+            while (number < 0)
             {
                 Console.Write(questionText);
                 try
@@ -135,10 +137,10 @@ namespace AethiopicMultiplication
             }
         }
 
-        public static int Multiply(int multiplicator, int multiplicand)
+        public static int Multiply(int x, int y)
         {
-            int result = multiplicator * multiplicand;
-            Console.WriteLine("Ergebnis Multiplikation             aus {0} * {1} = {2}", multiplicator, multiplicand, result);
+            int result = x * y;
+            Console.WriteLine("Ergebnis Multiplikation             aus {0} * {1} = {2}", x, y, result);
             return result;
         }
         
@@ -155,14 +157,22 @@ namespace AethiopicMultiplication
 
         public static int DoAethiopicMultiplication(int multiplier, int multiplicand)
         {
+            int result = 0;
+            int row = 1;
             table[0, 0] = multiplier;
             table[0, 1] = multiplicand;
+            // next line is needed because multiplicand will be set to 0 when result of mulitplicator Modulo 2 is Zero and i need
+            // the value in Console.WriteLine of result
             int firstMultiplicand = multiplicand;
             // without this condition the first row wouldn't be added, when the multiplier is even
             if (table[0, 0] % 2 == 0)
+            {
                 table[0, 1] = 0;
+            } else
+            {
+                result = result + table[0, 1];
+            }
 
-            int row = 1;
             while (row < amountOfRowsInArray)
             { 
                 multiplier = multiplier / 2;
@@ -176,16 +186,12 @@ namespace AethiopicMultiplication
                 else
                 {
                     table[row, 1] = multiplicand;
+                    result = result + table[row, 1];
                 }
 
                 row++;
             }
 
-            int result = 0;
-            for (int i = 0; i < amountOfRowsInArray; i++)
-            {
-                result = result + table[i, 1];
-            }
             Console.WriteLine("Ergebnis äthiopische Multiplikation aus {0} * {1} = {2}", table[0, 0], firstMultiplicand, result);
             return result;
         }
